@@ -2,6 +2,8 @@
 
 Simple console Tic Tac Toe game
 
+![screenshot](./docs/assets/game-screenshot.png)
+
 ## Build
 
 In order to build the project, run the following command:
