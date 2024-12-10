@@ -1,7 +1,7 @@
 #ifndef SQUARE_H
 #define SQUARE_H
 
-struct Square {
+struct SquarePosition {
   int row;
   int column;
 };

@@ -1,17 +1,17 @@
 #include <stdbool.h>
 
-#include "./playerUseCases.h"
 #include "../entities/game.h"
+#include "./checkSquareUseCase.h"
 
-bool isSquareValid(struct Square square) {
-  return square.column >= 0 && square.column <= 2 && square.row >= 0 && square.row <= 2;
+bool isSquareValid(struct SquarePosition sp) {
+  return sp.column >= 0 && sp.column <= 2 && sp.row >= 0 && sp.row <= 2;
 } 
 
-bool isSquareOccupied(struct Square square, struct Game* game) {
-  return game->board[square.row][square.column] != SQUARE_STATUS_EMPTY;
+bool isSquareOccupied(struct SquarePosition sp, const enum SquareStatus board[3][3]) {
+  return board[sp.row][sp.column] != SQUARE_STATUS_EMPTY;
 }
 
-bool isSquaresWin(enum SquareStatus* squares) {
+bool isSquaresWin(const enum SquareStatus* squares) {
   return squares[0] == squares[1] &&
          squares[0] == squares[2] &&
          squares[1] == squares[2] &&
@@ -21,8 +21,9 @@ bool isSquaresWin(enum SquareStatus* squares) {
 bool isAllSquaresOccupied(const enum SquareStatus board[3][3]) {
   for (int i = 0; i < 3; i +=1 ) {
     for (int j = 0; j < 3; j += 1) {
-      if (board[i][j] == SQUARE_STATUS_EMPTY)
+      if (board[i][j] == SQUARE_STATUS_EMPTY) {
         return false;
+      }
     }
   }
 
@@ -61,18 +62,18 @@ void updateGameStatus(struct Game* game) {
     : GAME_STATUS_RUNNING;
 }
 
-void checkSquareUseCase(struct Square square, struct Game* game) {
-  if (!isSquareValid(square)) {
-    game->userAction = USER_ACTION_INVALID_SQUARE;
+void checkSquareUseCase(struct SquarePosition sp, struct Game* game) {
+  if (!isSquareValid(sp)) {
+    game->userResponse = USER_RESPONSE_INVALID_SQUARE;
     return;
   }
 
-  if (isSquareOccupied(square, game)) {
-    game->userAction = USER_ACTION_SQUARE_OCCUPIED;
+  if (isSquareOccupied(sp, game->board)) {
+    game->userResponse = USER_RESPONSE_SQUARE_OCCUPIED;
     return;
   }
 
-  game->board[square.row][square.column] = 
+  game->board[sp.row][sp.column] = 
     game->playerTurn == PLAYER_TURN_1
       ? SQUARE_STATUS_PLAYER_1
       : SQUARE_STATUS_PLAYER_2;
@@ -84,6 +85,6 @@ void checkSquareUseCase(struct Square square, struct Game* game) {
       ? PLAYER_TURN_2
       : PLAYER_TURN_1;
  
-  game->userAction = USER_ACTION_SUCCESS;
+  game->userResponse = USER_RESPONSE_SUCCESS;
 }
 

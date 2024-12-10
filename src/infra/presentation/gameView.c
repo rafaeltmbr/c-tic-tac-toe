@@ -14,28 +14,28 @@ char squareStatusSymbol(enum SquareStatus status) {
   return '?';
 }
 
-const char* userActionMessage(enum UserAction userAction) {
-  switch (userAction) {
-    case USER_ACTION_SUCCESS:
+const char* userResponseMessage(enum UserResponse userResponse) {
+  switch (userResponse) {
+    case USER_RESPONSE_SUCCESS:
       return "";
 
-    case USER_ACTION_INVALID_SQUARE:
+    case USER_RESPONSE_INVALID_SQUARE:
       return "Invalid square."; 
 
-    case USER_ACTION_SQUARE_OCCUPIED:
+    case USER_RESPONSE_SQUARE_OCCUPIED:
       return "Square already occupied.";
   }
 
   return "";
 }
 
-void printGameStatus(struct Game game) {
-  switch (game.status) {
+void printGameStatus(const struct Game* game) {
+  switch (game->status) {
     case GAME_STATUS_RUNNING:
       printf(
         "\nPlayer %s turn. %s\n",
-        game.playerTurn == PLAYER_TURN_1 ? "1" : "2",
-        userActionMessage(game.userAction)
+        game->playerTurn == PLAYER_TURN_1 ? "1" : "2",
+        userResponseMessage(game->userResponse)
       );
       break;
    case GAME_STATUS_PLAYER_1_WIN:
@@ -50,7 +50,7 @@ void printGameStatus(struct Game game) {
   }
 }
 
-void showGame(struct Game game) {
+void showGame(const struct Game* game) {
   system("clear");
   printf("\n    TIC TAC TOE  \n\n");
   printf("     a   b   c   \n");
@@ -58,25 +58,25 @@ void showGame(struct Game game) {
 
   printf(
     "1  | %c | %c | %c | \n",
-    squareStatusSymbol(game.board[0][0]),
-    squareStatusSymbol(game.board[0][1]),
-    squareStatusSymbol(game.board[0][2])
+    squareStatusSymbol(game->board[0][0]),
+    squareStatusSymbol(game->board[0][1]),
+    squareStatusSymbol(game->board[0][2])
   );
   printf("   ------------- \n");
 
   printf(
     "2  | %c | %c | %c | \n",
-    squareStatusSymbol(game.board[1][0]),
-    squareStatusSymbol(game.board[1][1]),
-    squareStatusSymbol(game.board[1][2])
+    squareStatusSymbol(game->board[1][0]),
+    squareStatusSymbol(game->board[1][1]),
+    squareStatusSymbol(game->board[1][2])
   );
   printf("   ------------- \n");
 
   printf(
     "3  | %c | %c | %c | \n",
-    squareStatusSymbol(game.board[2][0]),
-    squareStatusSymbol(game.board[2][1]),
-    squareStatusSymbol(game.board[2][2])
+    squareStatusSymbol(game->board[2][0]),
+    squareStatusSymbol(game->board[2][1]),
+    squareStatusSymbol(game->board[2][2])
   );
   printf("   ------------- \n");
 
@@ -111,13 +111,13 @@ int parseRow(char row) {
   return -1;
 }
 
-struct Square readUserInput() {
+struct SquarePosition readUserInput() {
   char input[3];
 
   printf("Square: ");
   scanf("%2s", input);
   
-  struct Square square = {
+  struct SquarePosition square = {
     .column = parseColumn((char) input[0]),
     .row = parseRow(input[1])
   };

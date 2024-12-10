@@ -19,17 +19,17 @@ enum SquareStatus {
   SQUARE_STATUS_PLAYER_2,
 };
 
-enum UserAction {
-  USER_ACTION_SUCCESS,
-  USER_ACTION_SQUARE_OCCUPIED,
-  USER_ACTION_INVALID_SQUARE
+enum UserResponse {
+  USER_RESPONSE_SUCCESS,
+  USER_RESPONSE_SQUARE_OCCUPIED,
+  USER_RESPONSE_INVALID_SQUARE
 };
 
 struct Game {
   enum GameStatus status;
   enum PlayerTurn playerTurn;
   enum SquareStatus board[3][3];
-  enum UserAction userAction;
+  enum UserResponse userResponse;
 };
 
 #endif // GAME_H
